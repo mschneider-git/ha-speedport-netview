@@ -43,5 +43,12 @@ lässt sich später unter „Konfigurieren" ändern (Vorgabe 30 Sekunden).
 
 ## Grenzen
 
-Getestet mit einem Speedport Smart 3. Andere Modelle liefern die Geräteliste
-möglicherweise unter einem anderen Pfad oder mit anderen Feldnamen.
+Getestet mit genau einem Speedport Smart 3. Andere Modelle liefern die
+Geräteliste möglicherweise unter einem anderen Pfad oder mit anderen
+Feldnamen. Das Projekt entstand für eine einzelne Installation und wird nicht
+aktiv gepflegt — Fehlerberichte und Pull Requests sind willkommen, eine Zusage
+auf Bearbeitung gibt es aber nicht.
+
+## Lizenz
+
+MIT, siehe [LICENSE](LICENSE).
