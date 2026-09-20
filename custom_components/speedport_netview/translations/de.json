@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Speedport",
+        "description": "Die Statusseite des Routers wird ohne Anmeldung gelesen, damit die Weboberfläche weiterhin nutzbar bleibt.",
+        "data": { "host": "Adresse" }
+      }
+    },
+    "error": {
+      "cannot_connect": "Der Router ist unter dieser Adresse nicht erreichbar.",
+      "invalid_response": "Der Router hat keine lesbare Geräteliste geliefert."
+    },
+    "abort": { "already_configured": "Dieser Router ist bereits eingerichtet." }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Abfrageintervall",
+        "data": { "scan_interval": "Sekunden zwischen zwei Abfragen" }
+      }
+    }
+  }
+}

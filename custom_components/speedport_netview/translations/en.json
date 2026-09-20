@@ -1,0 +1,30 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Speedport",
+        "description": "The router's status page is read without logging in, so its web interface stays usable.",
+        "data": {
+          "host": "Address"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "The router is not reachable at this address.",
+      "invalid_response": "The router did not return a readable device list."
+    },
+    "abort": {
+      "already_configured": "This router is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Polling interval",
+        "data": {
+          "scan_interval": "Seconds between two polls"
+        }
+      }
+    }
+  }
+}
