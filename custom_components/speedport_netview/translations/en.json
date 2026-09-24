@@ -20,9 +20,10 @@
   "options": {
     "step": {
       "init": {
-        "title": "Polling interval",
+        "title": "Options",
         "data": {
-          "scan_interval": "Seconds between two polls"
+          "scan_interval": "Seconds between two polls",
+          "cleanup_days": "Remove trackers after this many days without a connection (0 = never)"
         }
       }
     }

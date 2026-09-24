@@ -16,8 +16,11 @@
   "options": {
     "step": {
       "init": {
-        "title": "Abfrageintervall",
-        "data": { "scan_interval": "Sekunden zwischen zwei Abfragen" }
+        "title": "Optionen",
+        "data": {
+          "scan_interval": "Sekunden zwischen zwei Abfragen",
+          "cleanup_days": "Tracker entfernen nach so vielen Tagen ohne Verbindung (0 = nie)"
+        }
       }
     }
   }
