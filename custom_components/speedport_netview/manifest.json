@@ -1,12 +1,12 @@
 {
   "domain": "speedport_netview",
   "name": "Speedport Netview",
-  "codeowners": [],
+  "codeowners": ["@mschneider-git"],
   "config_flow": true,
   "documentation": "https://github.com/mschneider-git/ha-speedport-netview",
   "integration_type": "hub",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/mschneider-git/ha-speedport-netview/issues",
   "requirements": [],
-  "version": "1.0.0"
+  "version": "1.1.0"
 }

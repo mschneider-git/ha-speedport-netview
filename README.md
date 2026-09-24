@@ -35,11 +35,22 @@ Die Integration erfindet keine Nachlaufzeit: Was der Router als getrennt meldet,
 ist `not_home`. Eine Verzögerung lässt sich bei Bedarf in Home Assistant über
 einen eigenen Helfer ergänzen.
 
+Tracker für **private (zufällige) MAC-Adressen** werden deaktiviert angelegt.
+Handys und Laptops wechseln diese Adressen je nach Einstellung regelmäßig, und
+jede neue Adresse wäre ein weiterer Tracker. Wer ein solches Gerät verfolgen
+will, schaltet seinen Tracker einfach ein.
+
+War ein Gerät länger als die **Aufräumfrist** (Vorgabe 30 Tage) nicht mehr
+verbunden, wird sein Tracker entfernt. Verbindet es sich erneut, entsteht er
+wieder. Die Frist lässt sich unter „Konfigurieren" ändern; `0` schaltet das
+Aufräumen ab.
+
 ## Einrichtung
 
 Einstellungen → Geräte & Dienste → Integration hinzufügen → *Speedport Netview*,
 dann die Adresse des Routers angeben (Vorgabe `192.168.2.1`). Das Abfrageintervall
-lässt sich später unter „Konfigurieren" ändern (Vorgabe 30 Sekunden).
+(Vorgabe 30 Sekunden) und die Aufräumfrist (Vorgabe 30 Tage) lassen sich später
+unter „Konfigurieren" ändern.
 
 ## Grenzen
 

@@ -12,7 +12,7 @@ import json
 import re
 from dataclasses import dataclass
 
-from aiohttp import ClientError, ClientResponse, ClientSession
+from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives.ciphers.aead import AESCCM
 
@@ -21,6 +21,7 @@ from .const import (
     DEVICE_TEMPLATES,
     KEY_PATTERN,
     MAX_RESPONSE_BYTES,
+    REQUEST_TIMEOUT,
     SCRIPT_PATH,
 )
 
@@ -35,6 +36,10 @@ class SpeedportConnectionError(SpeedportError):
 
 class SpeedportResponseError(SpeedportError):
     """The router answered, but not with a readable device list."""
+
+
+class SpeedportKeyError(SpeedportResponseError):
+    """The device list did not decrypt with the key: it may have changed."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,13 +71,16 @@ class SpeedportClient:
     async def async_get_devices(self) -> list[SpeedportDevice]:
         """Return every device the router currently lists."""
         payload = await self._fetch(DEVICE_LIST_PATH)
-        key = self._key or await self._async_load_key()
+        cached = self._key
+        key = cached or await self._async_load_key()
         try:
             document = _decrypt(payload, key)
-        except SpeedportResponseError:
+        except SpeedportKeyError:
             # Ein Firmware-Update kann den Schluessel wechseln. Einmal neu
-            # einlesen, bevor der Abruf als fehlgeschlagen gilt.
-            if self._key is None:
+            # einlesen, bevor der Abruf als fehlgeschlagen gilt. Andere Fehler
+            # (z. B. eine HTML-Fehlerseite statt Hex) liegen nicht am
+            # Schluessel und loesen deshalb keinen zweiten Abruf aus.
+            if cached is None:
                 raise
             document = _decrypt(payload, await self._async_load_key())
         return _parse(document)
@@ -90,7 +98,9 @@ class SpeedportClient:
         """Fetch one unauthenticated path from the router."""
         url = f"http://{self._host}{path}"
         try:
-            async with self._session.get(url, allow_redirects=False) as response:
+            async with self._session.get(
+                url, allow_redirects=False, timeout=ClientTimeout(total=REQUEST_TIMEOUT)
+            ) as response:
                 return await self._read(response)
         except ClientError as err:
             raise SpeedportConnectionError(str(err)) from err
@@ -124,7 +134,7 @@ def _decrypt(payload: bytes, key: bytes) -> list[dict]:
     try:
         plaintext = AESCCM(key, tag_length=16).decrypt(key[:8], ciphertext, b"")
     except (InvalidTag, ValueError) as err:
-        raise SpeedportResponseError("device list could not be decrypted") from err
+        raise SpeedportKeyError("device list could not be decrypted") from err
     try:
         document = json.loads(plaintext)
     except (UnicodeDecodeError, json.JSONDecodeError) as err:

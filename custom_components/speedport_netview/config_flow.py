@@ -18,10 +18,13 @@ from homeassistant.helpers.selector import (
 
 from .api import SpeedportClient, SpeedportConnectionError, SpeedportError
 from .const import (
+    CONF_CLEANUP_DAYS,
     CONF_SCAN_INTERVAL,
+    DEFAULT_CLEANUP_DAYS,
     DEFAULT_HOST,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    MAX_CLEANUP_DAYS,
     MAX_SCAN_INTERVAL,
     MIN_SCAN_INTERVAL,
 )
@@ -32,6 +35,12 @@ def _interval_selector() -> NumberSelector:
         NumberSelectorConfig(
             min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL, mode=NumberSelectorMode.BOX
         )
+    )
+
+
+def _cleanup_selector() -> NumberSelector:
+    return NumberSelector(
+        NumberSelectorConfig(min=0, max=MAX_CLEANUP_DAYS, mode=NumberSelectorMode.BOX)
     )
 
 
@@ -83,7 +92,7 @@ class SpeedportConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class SpeedportOptionsFlow(config_entries.OptionsFlow):
-    """Let the polling interval be changed."""
+    """Let the polling interval and the cleanup period be changed."""
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -91,18 +100,24 @@ class SpeedportOptionsFlow(config_entries.OptionsFlow):
         """Handle the options step."""
         if user_input is not None:
             return self.async_create_entry(
-                data={CONF_SCAN_INTERVAL: int(user_input[CONF_SCAN_INTERVAL])}
+                data={
+                    CONF_SCAN_INTERVAL: int(user_input[CONF_SCAN_INTERVAL]),
+                    CONF_CLEANUP_DAYS: int(user_input[CONF_CLEANUP_DAYS]),
+                }
             )
-        current = self.config_entry.options.get(
-            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-        )
+        options = self.config_entry.options
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        CONF_SCAN_INTERVAL, default=current
-                    ): _interval_selector()
+                        CONF_SCAN_INTERVAL,
+                        default=options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+                    ): _interval_selector(),
+                    vol.Required(
+                        CONF_CLEANUP_DAYS,
+                        default=options.get(CONF_CLEANUP_DAYS, DEFAULT_CLEANUP_DAYS),
+                    ): _cleanup_selector(),
                 }
             ),
         )

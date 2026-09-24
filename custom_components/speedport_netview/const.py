@@ -13,6 +13,13 @@ MAX_SCAN_INTERVAL: Final = 600
 
 CONF_SCAN_INTERVAL: Final = "scan_interval"
 
+# Tracker fuer Geraete, die so lange nicht mehr verbunden waren, werden
+# entfernt (0 = nie). Handys und Laptops wechseln ihre private WLAN-Adresse,
+# ohne Aufraeumen sammeln sich sonst verwaiste Tracker an.
+CONF_CLEANUP_DAYS: Final = "cleanup_days"
+DEFAULT_CLEANUP_DAYS: Final = 30
+MAX_CLEANUP_DAYS: Final = 365
+
 # Die Statusseite /html/login/netview.html liefert die Geraeteliste ohne Login,
 # allerdings AES-CCM-verschluesselt. Den Schluessel fuer nicht angemeldete
 # Aufrufe haelt die Weboberflaeche selbst in js/jquery-addons.js vor
@@ -23,6 +30,9 @@ SCRIPT_PATH: Final = "/js/jquery-addons.js"
 KEY_PATTERN: Final = r'keyArrayDefault\s*=\s*[\'"]([0-9a-fA-F]{64})[\'"]'
 
 DEVICE_LIST_PATH: Final = "/data/DeviceList.json"
+
+# Ein haengender Router soll eine Abfrage nicht minutenlang blockieren.
+REQUEST_TIMEOUT: Final = 10
 
 # Maximale Groesse der Antwort, damit ein defektes oder fremdes Geraet den
 # Speicher nicht vollaeuft.

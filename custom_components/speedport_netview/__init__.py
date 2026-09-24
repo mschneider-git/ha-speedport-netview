@@ -13,6 +13,7 @@ PLATFORMS = [Platform.DEVICE_TRACKER]
 async def async_setup_entry(hass: HomeAssistant, entry: SpeedportConfigEntry) -> bool:
     """Set up one router from a config entry."""
     coordinator = SpeedportCoordinator(hass, entry, entry.data[CONF_HOST])
+    await coordinator.async_load_last_seen()
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
